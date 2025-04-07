@@ -19,10 +19,11 @@ jobs:
       id-token: write
     runs-on: ubuntu-latest
     steps:
-      # Step 1: Code checkout
-      - uses: actions/checkout@v4
+      # Step 1: Code Checkout
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      # ✅ Step 2: Get secrets from Azure Key Vault
+      # Step 2: Get secrets from Azure Key Vault
       - name: Get secrets from Azure Key Vault
         uses: azure/get-keyvault-secrets@v1
         with:
@@ -32,19 +33,19 @@ jobs:
             AZURE-TENANT-ID
             AZURE-SUBSCRIPTION-ID
 
-      # ✅ Step 3: Azure Login via OIDC using secrets as env
+      # Step 3: Azure Login using OIDC and secrets from Key Vault
       - name: Azure Login via OIDC
         uses: azure/login@v1
         with:
-          client-id: ${{ env.AZURE_CLIENT_ID }}
-          tenant-id: ${{ env.AZURE_TENANT_ID }}
-          subscription-id: ${{ env.AZURE_SUBSCRIPTION_ID }}
-          allow-no-subscriptions: true
+          client-id: ${{ env.AZURE-CLIENT-ID }}
+          tenant-id: ${{ env.AZURE-TENANT-ID }}
+          subscription-id: ${{ env.AZURE-SUBSCRIPTION-ID }}
           enable-AzPSSession: true
+          allow-no-subscriptions: false
 
-      # ✅ Step 4: Echo secrets (debugging ke liye optional)
-      - name: Echo secrets
+      # (Optional) Step 4: Echo for debugging
+      - name: Echo for Debug
         run: |
-          echo "Client ID: $AZURE_CLIENT_ID"
-          echo "Tenant ID: $AZURE_TENANT_ID"
-          echo "Subscription ID: $AZURE_SUBSCRIPTION_ID"
+          echo "CLIENT: ${{ env.AZURE-CLIENT-ID }}"
+          echo "TENANT: ${{ env.AZURE-TENANT-ID }}"
+          echo "SUBSCRIPTION: ${{ env.AZURE-SUBSCRIPTION-ID }}"
