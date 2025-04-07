@@ -1,34 +1,21 @@
-name: Deploy using Azure Key Vault
-on:
-  push:
-    branches:
-      - master
+- name: Azure Login via OIDC
+  uses: azure/login@v1
+  with:
+    client-id: ${{ secrets.AZURE_CLIENT_ID }}
+    tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+    subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+    allow-no-subscriptions: true
+    enable-AzPSSession: true
 
-permissions:
-  id-token: write
-  contents: read
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
-
-      - name: Azure Login
-        uses: azure/login@v1
-        with:
-          client-id: <YOUR_CLIENT_ID>
-          tenant-id: <YOUR_TENANT_ID>
-          subscription-id: <YOUR_SUBSCRIPTION_ID>
-
-      - name: Get secrets from Key Vault
-        uses: azure/get-keyvault-secrets@v1
-        with:
-          keyvault: key-valte
-          secrets: |
-            my-secret-name
-        id: secrets
-
-      - name: Use secret
-        run: echo "Secret is ${{ steps.secrets.outputs.my-secret-name }}"
+- name: Get secrets from Azure Key Vault
+  uses: azure/get-keyvault-secrets@v1
+  with:
+    keyvault: "key-valte"
+    secrets: |
+      AZURE-CLIENT-ID
+      AZURE-TENANT-ID
+      AZURE-SUBSCRIPTION-ID
+  env:
+    AZURE_CLIENT_ID: ${{ secrets.AZURE-CLIENT-ID }}
+    AZURE_TENANT_ID: ${{ secrets.AZURE-TENANT-ID }}
+    AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE-SUBSCRIPTION-ID }}
