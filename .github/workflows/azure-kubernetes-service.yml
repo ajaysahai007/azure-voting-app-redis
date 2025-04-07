@@ -35,11 +35,11 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_CONTAINER_REGISTRY: "your-azure-container-registry"
-  CONTAINER_NAME: "your-container-name"
-  RESOURCE_GROUP: "your-resource-group"
-  CLUSTER_NAME: "your-cluster-name"
-  DEPLOYMENT_MANIFEST_PATH: "your-deployment-manifest-path"
+  AZURE_CONTAINER_REGISTRY: "imageacr"
+  CONTAINER_NAME: "imageacr"
+  RESOURCE_GROUP: "docker-image"
+  CLUSTER_NAME: "imageacr"
+  DEPLOYMENT_MANIFEST_PATH: "imageacr"
 
 jobs:
   buildImage:
