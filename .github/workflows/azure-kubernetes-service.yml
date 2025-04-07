@@ -25,6 +25,7 @@ jobs:
 
       # Step 2: Get secrets from Azure Key Vault
       - name: Get secrets from Azure Key Vault
+        id: get-secrets
         uses: azure/get-keyvault-secrets@v1
         with:
           keyvault: "key-valte"
@@ -33,18 +34,26 @@ jobs:
             AZURE-TENANT-ID
             AZURE-SUBSCRIPTION-ID
 
-      # Step 3: Azure Login using OIDC and secrets from Key Vault
-- name: Export Secrets as ENV
-  run: |
-    echo "AZURE_CLIENT_ID=${{ steps.get-secrets.outputs.AZURE-CLIENT-ID }}" >> $GITHUB_ENV
-    echo "AZURE_TENANT_ID=${{ steps.get-secrets.outputs.AZURE-TENANT-ID }}" >> $GITHUB_ENV
-    echo "AZURE_SUBSCRIPTION_ID=${{ steps.get-secrets.outputs.AZURE-SUBSCRIPTION-ID }}" >> $GITHUB_ENV
-  id: export-secrets
+      # ✅ Step 3: Export Secrets to Environment
+      - name: Export Secrets as ENV
+        run: |
+          echo "AZURE_CLIENT_ID=${{ steps.get-secrets.outputs.AZURE-CLIENT-ID }}" >> $GITHUB_ENV
+          echo "AZURE_TENANT_ID=${{ steps.get-secrets.outputs.AZURE-TENANT-ID }}" >> $GITHUB_ENV
+          echo "AZURE_SUBSCRIPTION_ID=${{ steps.get-secrets.outputs.AZURE-SUBSCRIPTION-ID }}" >> $GITHUB_ENV
 
+      # ✅ Step 4: Azure Login using exported secrets
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          client-id: ${{ env.AZURE_CLIENT_ID }}
+          tenant-id: ${{ env.AZURE_TENANT_ID }}
+          subscription-id: ${{ env.AZURE_SUBSCRIPTION_ID }}
+          enable-AzPSSession: true
+          allow-no-subscriptions: false
 
-      # (Optional) Step 4: Echo for debugging
+      # Optional: Debug secrets
       - name: Echo for Debug
         run: |
-          echo "CLIENT: ${{ env.AZURE-CLIENT-ID }}"
-          echo "TENANT: ${{ env.AZURE-TENANT-ID }}"
-          echo "SUBSCRIPTION: ${{ env.AZURE-SUBSCRIPTION-ID }}"
+          echo "CLIENT: ${{ env.AZURE_CLIENT_ID }}"
+          echo "TENANT: ${{ env.AZURE_TENANT_ID }}"
+          echo "SUBSCRIPTION: ${{ env.AZURE_SUBSCRIPTION_ID }}"
