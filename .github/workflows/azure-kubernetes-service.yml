@@ -38,7 +38,7 @@ env:
   AZURE_CONTAINER_REGISTRY: "testdockerimg"
   CONTAINER_NAME: "testdockerimg"
   RESOURCE_GROUP: "rg0408"
-  CLUSTER_NAME: "testdockerimg"
+  CLUSTER_NAME: "testaks"
   DEPLOYMENT_MANIFEST_PATH: "testdockerimg"
 
 jobs:
