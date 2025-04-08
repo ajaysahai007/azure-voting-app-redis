@@ -39,7 +39,7 @@ env:
   CONTAINER_NAME: "testdockerimg"
   RESOURCE_GROUP: "rg0408"
   CLUSTER_NAME: "testaks"
-  DEPLOYMENT_MANIFEST_PATH: "testdockerimg"
+  DEPLOYMENT_MANIFEST_PATH: "azure-vote-all-in-one-redis.yaml"
 
 jobs:
   buildImage:
